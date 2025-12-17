@@ -1,6 +1,6 @@
 package com.backend.domain.order.order.service;
 
-import com.backend.domain.order.order.controller.OrderController;
+import com.backend.domain.item.item.entity.Item;
 import com.backend.domain.order.order.repository.OrderRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,7 +17,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Order create(String email, String zipCode, String address, @NotEmpty @Valid List<OrderController.RequestedItems> items) {
+    public Order create(String email, String zipCode, String address, @NotEmpty @Valid List<Item> items) {
         Order order = new Order(email, zipCode, address, items);
 
         return orderRepository.save(order);
@@ -36,7 +36,7 @@ public class OrderService {
     }
 
     //TODO 작업 중지
-    public void modify(Order order, @NotEmpty @Valid List<OrderController.RequestedItems> items) {
+    public void modify(Order order, @NotEmpty @Valid List<Item> items) {
         order.modify(items);
     }
     //다건 검색

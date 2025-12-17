@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.backend.domain.order.order.dto.OrderDto;
 import com.backend.domain.order.order.entity.Order;
 import com.backend.global.rsData.RsData;
+import com.backend.domain.item.item.entity.Item;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -24,13 +25,13 @@ public class OrderController {
     private final OrderService orderService;
 
     //받아오는 상품 형식
-    record RequestedItems(
+    /*record RequestedItems(
             @NotBlank
             String itemName,
 
             @Min(1)
             int quantity
-    ) {}
+    ) {}*/
 
     //주문 시 내용을 받아오는 형식
     record OrderCreateRequestBody(
@@ -49,7 +50,7 @@ public class OrderController {
 
             @NotEmpty
             @Valid
-            List<RequestedItems> items
+            List<Item> items
     ){}
 
 
@@ -92,7 +93,7 @@ public class OrderController {
 
             @NotEmpty
             @Valid
-            List<RequestedItems> items
+            List<Item> items
     ){}
 
     //TODO 리뷰필요
