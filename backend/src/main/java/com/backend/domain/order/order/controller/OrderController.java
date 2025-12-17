@@ -23,7 +23,8 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    record OrderItemRequest(
+    //받아오는 상품 형식
+    record RequestedItems(
             @NotBlank
             String itemName,
 
@@ -47,11 +48,12 @@ public class OrderController {
             String address,
 
             @NotEmpty
-            List<OrderItemRequest> items
+            @Valid
+            List<RequestedItems> items
     ){}
 
 
-    //TODO 리뷰 필요합니다
+    //TODO 리뷰필요
     @PostMapping("/create")
     @Transactional
     @Operation(summary = "최초 주문")
@@ -89,10 +91,11 @@ public class OrderController {
             String address,
 
             @NotEmpty
-            List<OrderItemRequest> items
+            @Valid
+            List<RequestedItems> items
     ){}
 
-    //TODO 작업 중단
+    //TODO 리뷰필요
     @PutMapping("/modify/{order_id}")
     @Transactional
     @Operation(summary = "주문 수정")
@@ -104,7 +107,12 @@ public class OrderController {
 
         orderService.modify(
                 order,
-                orderModifyRequestBody.items()
+                orderModifyRequestBody.items
+        );
+
+        return new RsData<>(
+                "200-1",
+                "주문 수정이 완료되었습니다."
         );
     }
 
