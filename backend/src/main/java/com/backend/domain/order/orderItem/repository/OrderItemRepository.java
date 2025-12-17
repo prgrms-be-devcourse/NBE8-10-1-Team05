@@ -1,4 +1,7 @@
 package com.backend.domain.order.orderItem.repository;
 
-public class OrderItemRepository {
+import com.backend.domain.order.orderItem.entity.OrderItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 }

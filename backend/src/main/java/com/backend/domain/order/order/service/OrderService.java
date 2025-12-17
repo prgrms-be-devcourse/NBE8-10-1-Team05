@@ -1,5 +1,6 @@
 package com.backend.domain.order.order.service;
 
+import com.backend.domain.order.order.controller.OrderController;
 import com.backend.domain.order.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,16 @@ public class OrderService {
 
     public void delete(Order order) {
         orderRepository.delete(order);
+    }
+
+    //TODO 작업 중지
+    /*public void modify(Order order, ) {
+        order.modify();
+    }
+*/
+    //다건 검색
+    public List<Order> findByEmail(String email) {
+        return orderRepository.findByEmail(email);
     }
 
 }
