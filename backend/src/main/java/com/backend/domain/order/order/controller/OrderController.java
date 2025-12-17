@@ -23,6 +23,14 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
+    record OrderItemRequest(
+            @NotBlank
+            String itemName,
+
+            @Min(1)
+            int quantity
+    ) {}
+
     //주문 시 내용을 받아오는 형식
     record OrderCreateRequestBody(
 
@@ -41,17 +49,10 @@ public class OrderController {
             @NotEmpty
             List<OrderItemRequest> items
     ){}
-    record OrderItemRequest(
-            @NotBlank
-            String itemName,
-
-            @Min(1)
-            int quantity
-    ) {}
 
 
-    //TODO 작업 중단
-   /* @PostMapping("/create")
+    //TODO 리뷰 필요합니다
+    @PostMapping("/create")
     @Transactional
     @Operation(summary = "최초 주문")
     public RsData<OrderDto> create(
@@ -61,7 +62,8 @@ public class OrderController {
         Order order = orderService.create(
                 orderCreateRequestBody.email,
                 orderCreateRequestBody.zipCode,
-                orderCreateRequestBody.address
+                orderCreateRequestBody.address,
+                orderCreateRequestBody.items
         ); // 수정 예정
 
         return new RsData<>(
@@ -69,7 +71,7 @@ public class OrderController {
                 "주문이 완료되었습니다",
                 new  OrderDto(order)
         );
-    }*/
+    }
 
     //주문 수정 시 내용을 받아오는 형식
     record OrderModifyRequestBody(
@@ -91,16 +93,20 @@ public class OrderController {
     ){}
 
     //TODO 작업 중단
-   /* @PutMapping("/modify/{order_id}")
+    @PutMapping("/modify/{order_id}")
     @Transactional
     @Operation(summary = "주문 수정")
     public RsData<Void> modifyOrder(
             @PathVariable int order_id,
-            @Valid @RequestBody OrderModifyRequestBody reqBody
+            @Valid @RequestBody OrderModifyRequestBody orderModifyRequestBody
     ){
         Order order = orderService.findById(order_id).get();
-        orderService.modify(order, reqBody.items());
-    }*/
+
+        orderService.modify(
+                order,
+                orderModifyRequestBody.items()
+        );
+    }
 
     @DeleteMapping("/cancel/{order_id}")
     @Transactional

@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import com.backend.domain.order.orderItem.entity.OrderItem;
+import com.backend.domain.item.item.entity.Item;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +38,6 @@ public class Order{
     @JoinColumn(name = "order_detail_id")
     private OrderItem orderItem;
 
-
     @CreatedDate
     private LocalDateTime createDate;
     @LastModifiedDate
@@ -63,15 +63,16 @@ public class Order{
         }
     }
 
-    //수정 예정
-    public Order(String email, String address, String zipCode) {
+
+    public Order(String email, String address, String zipCode, List<Item> items) {
         this.email = email;
         this.address = address;
         this.zipCode = zipCode;
+        this.orderItem = new OrderItem(items);
     }
 
     //상품 리스트만 받아와서 수정
-    public void modify(OrderItem orderItem) {
-        this.orderItem = orderItem;
+    public void modify(List<Item> items) {
+        modify(items);
     }
 }

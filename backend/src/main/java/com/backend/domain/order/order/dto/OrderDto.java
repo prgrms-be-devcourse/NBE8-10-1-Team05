@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.backend.domain.order.order.entity.Order;
 import com.backend.domain.order.orderItem.dto.OrderItemDto;
+import com.backend.domain.order.orderItem.entity.OrderItem;
 
 public record OrderDto (
         int id,
@@ -14,7 +15,7 @@ public record OrderDto (
         LocalDateTime createDate,
         LocalDateTime modifyDate,
         LocalDateTime dueDate,
-        List<OrderItemDto> items
+        OrderItem orderItem
 ){
 
     public OrderDto(Order order){
@@ -26,9 +27,7 @@ public record OrderDto (
                 order.getCreateDate(),
                 order.getModifyDate(),
                 order.getDueDate(),
-                order.getItems().stream()
-                        .map(OrderItemDto::new)
-                        .toList()
+                order.getOrderItem()
         );
     }
 

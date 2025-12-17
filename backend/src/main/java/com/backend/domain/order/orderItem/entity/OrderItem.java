@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.backend.domain.order.order.entity.Order;
+import com.backend.domain.item.item.entity.Item;
 
 import java.util.List;
 
@@ -16,9 +17,13 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String itemName;
-    private int quantity;
+    private List<Item> items;
 
-    @OneToMany(mappedBy = "orderItem")
-    private List<Item> Items;
+    public OrderItem(List<Item> items) {
+        this.items = items;
+    }
+
+    public void modify(List<Item> items){
+        this.items = items;
+    }
 }
