@@ -91,9 +91,17 @@ public class OrderController {
     @DeleteMapping("/cancel/{order_id}")
     @Transactional
     @Operation(summary = "주문 취소")
-    public RsData<Void> cancelOrder(
+    public RsData<OrderDto> cancelOrder(
             @PathVariable int order_id
     ){
+        Order order = orderService.findById(order_id).get();
 
+        orderService.delete(order);
+
+        return new RsData<>(
+                "200-1",
+                "주문 취소가 완료되었습니다.",
+                new OrderDto(order)
+        );
     }
 }

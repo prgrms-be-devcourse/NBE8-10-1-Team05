@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.backend.domain.order.order.entity.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,14 @@ public class OrderService {
 
     public List<Order> findAll() {
         return orderRepository.findAll();
+    }
+
+    public Optional<Order> findById(int order_id) {
+        return orderRepository.findById(order_id);
+    }
+
+    public void delete(Order order) {
+        orderRepository.delete(order);
     }
 
 }
