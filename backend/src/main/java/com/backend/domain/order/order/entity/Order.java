@@ -2,8 +2,8 @@ package com.backend.domain.order.order.entity;
 
 import com.backend.domain.order.order.dto.RequestedItem;
 import com.backend.domain.order.orderItem.entity.OrderItem;
+import com.backend.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,11 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "orderDetail")
-public class Order{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class Order extends BaseEntity {
 
     private String email;
     private String address;

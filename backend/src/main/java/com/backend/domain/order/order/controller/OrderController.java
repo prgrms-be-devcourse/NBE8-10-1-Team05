@@ -2,23 +2,21 @@ package com.backend.domain.order.order.controller;
 
 import com.backend.domain.order.order.dto.OrderCreateRequest;
 import com.backend.domain.order.order.dto.OrderModifyRequest;
+import com.backend.domain.order.order.dto.RequestedItem;
 import com.backend.domain.order.order.service.OrderService;
+import com.backend.domain.order.orderItem.entity.OrderItem;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.backend.domain.order.order.dto.OrderDto;
+import com.backend.domain.order.order.dto.OrderDtoMany;
 import com.backend.domain.order.order.entity.Order;
 import com.backend.global.rsData.RsData;
-import com.backend.domain.item.item.entity.Item;
 
 import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/order")
@@ -30,7 +28,7 @@ public class OrderController {
     @PostMapping("/create")
     @Transactional
     @Operation(summary = "최초 주문")
-    public RsData<OrderDto> create(
+    public RsData<OrderDtoMany> create(
             @Valid @RequestBody OrderCreateRequest req
     ){
         Order order = orderService.create(req);
@@ -38,7 +36,7 @@ public class OrderController {
         return new RsData<>(
                 "201-1",
                 "주문이 완료되었습니다",
-                new  OrderDto(order)
+                new OrderDtoMany(order)
         );
     }
 
@@ -65,7 +63,7 @@ public class OrderController {
     @DeleteMapping("/cancel/{order_id}")
     @Transactional
     @Operation(summary = "주문 취소")
-    public RsData<OrderDto> cancelOrder(
+    public RsData<OrderDtoMany> cancelOrder(
             @PathVariable int order_id
     ){
         Order order = orderService.findById(order_id).get();
@@ -75,7 +73,7 @@ public class OrderController {
         return new RsData<>(
                 "200-1",
                 "주문 취소가 완료되었습니다.",
-                new OrderDto(order)
+                new OrderDtoMany(order)
         );
     }
 
@@ -83,7 +81,7 @@ public class OrderController {
     @GetMapping("/listByEmail/{email}")
     @Transactional(readOnly = true)
     @Operation(summary = "다건 조회")
-    public List<OrderDto> findByEmail(
+    public List<OrderDtoMany> findByEmail(
             @PathVariable String email
     ){
 
@@ -91,7 +89,7 @@ public class OrderController {
 
         return orders
                 .stream()
-                .map(OrderDto::new)
+                .map(OrderDtoMany::new)
                 .toList();
     }
 
@@ -99,13 +97,16 @@ public class OrderController {
     @GetMapping("/detail/{order_id}")
     @Transactional(readOnly = true)
     @Operation(summary = "단건 조회")
-    public OrderDto getOrderDetail(
+    public List<RequestedItem> getOrderDetail(
             @PathVariable int order_id
     ){
-        Order order = orderService.findById(order_id).get();
+        Order order = orderService.findById(order_id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        return new OrderDto(order);
+        // OrderItem 리스트를 RequestedItem 리스트로 변환
+        return order.getOrderItems().stream()
+                .map(oi -> new RequestedItem(oi.getItemId(), oi.getQuantity()))
+                .collect(Collectors.toList());
     }
-
 
 }

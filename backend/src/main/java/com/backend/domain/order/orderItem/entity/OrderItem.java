@@ -1,5 +1,6 @@
 package com.backend.domain.order.orderItem.entity;
 
+import com.backend.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import com.backend.domain.order.order.entity.Order;
@@ -7,11 +8,7 @@ import com.backend.domain.order.order.entity.Order;
 
 @Entity
 @Getter
-public class OrderItem {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class OrderItem extends BaseEntity {
 
     @ManyToOne
     @JoinColumn

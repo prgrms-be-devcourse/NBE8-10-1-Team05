@@ -34,8 +34,8 @@ public class BaseInitData {
         return args -> {
            // self.work1();
             self.work2();
-            self.work3();
-            self.work4();
+            //self.work3();
+           // self.work4();
         };
     }
 
@@ -55,9 +55,9 @@ public class BaseInitData {
     @Transactional
     public void work2() {
         OrderCreateRequest orderReq = new OrderCreateRequest(
-                "aaa@test.com",
-                "12345",
-                "서울시 구로구",
+                "bbb@test.com",
+                "77777",
+                "후쿠오카",
                 List.of(
                         new RequestedItem(1, 2),
                         new RequestedItem(2, 1),
