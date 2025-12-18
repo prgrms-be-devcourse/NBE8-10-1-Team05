@@ -1,5 +1,6 @@
 package com.backend.domain.order.order.entity;
 
+import com.backend.domain.order.order.dto.RequestedItem;
 import com.backend.domain.order.orderItem.entity.OrderItem;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -65,21 +66,44 @@ public class Order{
         }
     }
 
+    public OrderItem addOrderItem(int itemId, int quantity) {
+        OrderItem orderItem = OrderItem.create(itemId, quantity);
+        orderItem.setOrder(this);
+        orderItems.add(orderItem);
+        return orderItem;
+    }
+
     protected Order() {}
 
-    public static Order create(String email, String address, String zipCode, List<OrderItem> items){
+    public static Order create(
+            String email,
+            String zipCode,
+            String address,
+            List<RequestedItem> items
+    ) {
         Order order = new Order();
         order.email = email;
-        order.address = address;
         order.zipCode = zipCode;
-        order.orderItems = items;
+        order.address = address;
+
+        items.forEach(item ->
+                order.addOrderItem(item.itemId(), item.quantity())
+        );
 
         return order;
     }
 
     //상품 리스트만 받아와서 수정
-    public void modify(List<OrderItem> items) {
-        this.orderItems = items;
+    public void modify(
+            Order order,
+            List<RequestedItem> items
+    ) {
         this.modifyDate = LocalDateTime.now();
+
+        orderItems.clear();
+
+        items.forEach(item ->
+                order.addOrderItem(item.itemId(), item.quantity())
+        );
     }
 }

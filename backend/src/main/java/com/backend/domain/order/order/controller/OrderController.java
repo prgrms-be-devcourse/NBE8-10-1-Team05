@@ -33,7 +33,7 @@ public class OrderController {
     public RsData<OrderDto> create(
             @Valid @RequestBody OrderCreateRequest req
     ){
-        Order order = orderService.create(req);// 수정 예정
+        Order order = orderService.create(req);
 
         return new RsData<>(
                 "201-1",
