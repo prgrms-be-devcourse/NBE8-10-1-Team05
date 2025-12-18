@@ -20,7 +20,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
-@NotBlank
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "orderDetail")
 public class Order{
@@ -85,6 +84,7 @@ public class Order{
         order.email = email;
         order.zipCode = zipCode;
         order.address = address;
+        order.createDate = LocalDateTime.now();
 
         items.forEach(item ->
                 order.addOrderItem(item.itemId(), item.quantity())

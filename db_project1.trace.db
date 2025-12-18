@@ -1,0 +1,12 @@
+2025-12-18 11:47:52.173134+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ORDER" not found; SQL statement:
+SELECT * FROM "ORDER" [42102-240]
+2025-12-18 11:48:12.124686+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ORDERDetail" not found; SQL statement:
+SELECT * FROM "ORDERDetail" [42102-240]
+2025-12-18 11:48:19.353635+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "orderDetail" not found; SQL statement:
+SELECT * FROM "orderDetail" [42102-240]
+2025-12-18 11:48:28.555179+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "order_Detail" not found (candidates are: "ORDER_DETAIL"); SQL statement:
+SELECT * FROM "order_Detail" [42103-240]
