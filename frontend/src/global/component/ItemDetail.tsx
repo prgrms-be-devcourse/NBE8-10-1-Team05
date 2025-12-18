@@ -25,11 +25,11 @@ export default function ItemDetail({ item, count, onIncrease, onDecrease }: Item
       {/* item Info */}
       <div className="flex-1">
         <h3 className="text-gray-600">{item.category}</h3>
-        <div className='font-medium'>{item.name}</div>
+        <div className='text-black font-medium'>{item.name}</div>
       </div>
 
       {/* Price */}
-      <div className="font-medium">
+      <div className="text-black font-medium">
         {item.price}원
       </div>
 

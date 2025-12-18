@@ -8,7 +8,7 @@ interface CounterProps {
 
 export default function Counter({ value, onIncrease, onDecrease }: CounterProps) {
   return (
-    <div className="border border-gray-300 rounded-lg w-[120px] flex justify-evenly items-center">
+    <div className="text-black border border-gray-300 rounded-lg w-[120px] flex justify-evenly items-center">
       <button className="text-3xl font-bold cursor-pointer" onClick={onDecrease}>
         −
       </button>

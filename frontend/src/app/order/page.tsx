@@ -50,7 +50,7 @@ export default function OrderPage() {
         <div className="bg-white rounded-xl shadow-lg flex flex-col lg:flex-row overflow-hidden">
           {/* Left: Item List */}
           <div className="p-6 flex-1">
-            <h2 className="text-2xl font-bold mb-6">상품 목록</h2>
+            <h2 className="text-black text-2xl font-bold mb-6">상품 목록</h2>
             {items.map((item) => (
               <ItemDetail
                 key={item.id}
@@ -64,7 +64,7 @@ export default function OrderPage() {
 
           {/* Right: Order Summary */}
           <div className="bg-gray-200 p-6 shrink-0">
-            <h2 className="text-2xl font-bold mb-6">Summary</h2>
+            <h2 className="text-black text-2xl font-bold mb-6">Summary</h2>
 
             {/* Selected Items */}
             <div className="mb-6 flex flex-col gap-2">
@@ -85,46 +85,46 @@ export default function OrderPage() {
             {/* Form Fields */}
             <div className="flex flex-col gap-4 mb-6">
               <div>
-                <div className="mb-2 font-medium">이메일</div>
+                <div className="text-black mb-2 font-medium">이메일</div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
                   placeholder="이메일을 입력하세요"
                 />
               </div>
 
               <div>
-                <div className="mb-2 font-medium">주소</div>
+                <div className="text-black mb-2 font-medium">주소</div>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
                   placeholder="주소를 입력하세요"
                 />
               </div>
 
               <div>
-                <div className="mb-2 font-medium">우편번호</div>
+                <div className="text-black mb-2 font-medium">우편번호</div>
                 <input
                   type="text"
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
                   placeholder="우편번호를 입력하세요"
                 />
               </div>
             </div>
 
             {/* Delivery Information */}
-            <div className="mb-6">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
+            <div className="text-black mb-6">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
 
             {/* Total Amount */}
             <div className="flex justify-between items-center mb-6">
-              <span className="text-xl font-medium">총금액</span>
-              <span className="text-2xl font-bold">{totalAmount}원</span>
+              <span className="text-black text-xl font-medium">총금액</span>
+              <span className="text-black text-2xl font-bold">{totalAmount}원</span>
             </div>
 
             {/* Checkout Button */}
