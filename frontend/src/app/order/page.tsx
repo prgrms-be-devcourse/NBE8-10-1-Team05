@@ -73,7 +73,7 @@ export default function OrderPage() {
               ) : (
                 cart.map((item) => (
                   <div key={item.itemId} className="flex items-center gap-2">
-                    <span>{item.name}</span>
+                    <span className="text-black">{item.name}</span>
                     <span className="bg-gray-800 text-sm text-white font-bold px-2 py-1 rounded-md">
                       {item.quantity}개
                     </span>
