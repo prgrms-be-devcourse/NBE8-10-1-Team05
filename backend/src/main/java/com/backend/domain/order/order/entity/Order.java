@@ -31,7 +31,7 @@ public class Order{
     private String address;
     private String zipCode;
 
-    @OneToOne
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_detail_id")
     private List<OrderItem> orderItems;
 

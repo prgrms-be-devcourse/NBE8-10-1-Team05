@@ -1,13 +1,10 @@
 package com.backend.domain.order.order.service;
 
-import com.backend.domain.item.item.entity.Item;
-import com.backend.domain.item.item.repository.ItemRepository;
+
 import com.backend.domain.order.order.dto.OrderCreateRequest;
 import com.backend.domain.order.order.dto.OrderModifyRequest;
 import com.backend.domain.order.order.repository.OrderRepository;
 import com.backend.domain.order.orderItem.entity.OrderItem;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.backend.domain.order.order.entity.Order;
