@@ -3,7 +3,7 @@
 import Button from "@/global/component/Button";
 import Header from "@/global/component/Header";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 interface Order {
   id: number;
@@ -35,9 +35,17 @@ const orders: Order[] = [
 
 
 export default function Page() {
-  // listByEmail?email=ex@example.com 형식을 받아오기
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email');
+  const [email, setEmail] = useState<string | null>(null);
+  const once = useRef(false);
+
+  useEffect(() => {
+    if (once.current) return;
+    once.current = true;
+    const input = prompt('이메일을 입력하세요.');
+    if (input) {
+      setEmail(input);
+    }
+  }, []);
 
   const handleCancelOrder = (orderId: number): void => {
     if (!confirm(`${orderId}번 주문을 정말로 취소하시겠습니까?`)) return;
