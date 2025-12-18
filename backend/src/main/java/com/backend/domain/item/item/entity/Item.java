@@ -11,11 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "item")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Item extends BaseEntity{
     @Column(nullable = false, length = 255)
     private String name;
 
@@ -27,9 +23,6 @@ public class Item {
 
     @Column(length = 100)
     private String imageUrl;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private OrderItem orderItem;
 
     public Item(String name, String category, int price, String imageUrl) {
         this.name = name;

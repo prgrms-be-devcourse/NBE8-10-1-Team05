@@ -32,7 +32,7 @@ public class BaseInitData {
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-           // self.work1();
+            self.work1();
             self.work2();
             self.work3();
             self.work4();
