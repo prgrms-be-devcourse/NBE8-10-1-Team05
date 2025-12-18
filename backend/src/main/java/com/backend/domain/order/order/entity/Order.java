@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Id;
@@ -31,9 +32,12 @@ public class Order{
     private String address;
     private String zipCode;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_detail_id")
-    private List<OrderItem> orderItems;
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true
+    )
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createDate;
