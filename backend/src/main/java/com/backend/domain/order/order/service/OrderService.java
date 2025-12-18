@@ -1,7 +1,11 @@
 package com.backend.domain.order.order.service;
 
 import com.backend.domain.item.item.entity.Item;
+import com.backend.domain.item.item.repository.ItemRepository;
+import com.backend.domain.order.order.dto.OrderCreateRequest;
+import com.backend.domain.order.order.dto.OrderModifyRequest;
 import com.backend.domain.order.order.repository.OrderRepository;
+import com.backend.domain.order.orderItem.entity.OrderItem;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
@@ -17,31 +21,51 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Order create(String email, String zipCode, String address, @NotEmpty @Valid List<Item> items) {
-        Order order = new Order(email, zipCode, address, items);
+    public Order create(OrderCreateRequest req) {
+
+        List<OrderItem> orderItems = req.items().stream()
+                .map(requestedItem -> {
+                    return OrderItem.create(
+                            requestedItem.itemId(),
+                            requestedItem.quantity()
+                    );
+                })
+                .toList();
+
+        Order order = Order.create(
+                req.email(),
+                req.zipCode(),
+                req.address(),
+                orderItems
+        );
 
         return orderRepository.save(order);
-    }
-
-    public List<Order> findAll() {
-        return orderRepository.findAll();
-    }
-
-    public Optional<Order> findById(int order_id) {
-        return orderRepository.findById(order_id);
     }
 
     public void delete(Order order) {
         orderRepository.delete(order);
     }
 
-    //TODO 작업 중지
-    public void modify(Order order, @NotEmpty @Valid List<Item> items) {
-        order.modify(items);
+    public void modify(Order order, OrderModifyRequest req) {
+
+        List<OrderItem> orderItems = req.items().stream()
+                .map(requestedItem -> {
+                    return OrderItem.create(
+                            requestedItem.itemId(),
+                            requestedItem.quantity()
+                    );
+                })
+                .toList();
+
+        order.modify(orderItems);
     }
-    //다건 검색
+
     public List<Order> findByEmail(String email) {
         return orderRepository.findByEmail(email);
+    }
+
+    public Optional<Order> findById(int order_id) {
+        return orderRepository.findById(order_id);
     }
 
 }

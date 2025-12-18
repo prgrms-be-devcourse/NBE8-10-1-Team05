@@ -14,8 +14,7 @@ public record OrderDto (
         String zipCode,
         LocalDateTime createDate,
         LocalDateTime modifyDate,
-        LocalDateTime dueDate,
-        OrderItem orderItem
+        LocalDateTime dueDate
 ){
 
     public OrderDto(Order order){
@@ -26,8 +25,7 @@ public record OrderDto (
                 order.getZipCode(),
                 order.getCreateDate(),
                 order.getModifyDate(),
-                order.getDueDate(),
-                order.getOrderItem()
+                order.getDueDate()
         );
     }
 

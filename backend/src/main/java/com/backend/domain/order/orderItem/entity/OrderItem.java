@@ -2,28 +2,40 @@ package com.backend.domain.order.orderItem.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import com.backend.domain.order.order.entity.Order;
-import com.backend.domain.item.item.entity.Item;
 
-import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private List<Item> items;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
-    public OrderItem(List<Item> items) {
-        this.items = items;
+    private int itemId;
+    private int quantity;
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
-    public void modify(List<Item> items){
-        this.items = items;
+    protected OrderItem() {}
+
+    public static OrderItem create(int itemId, int quantity) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.itemId= itemId;
+        orderItem.quantity = quantity;
+        return orderItem;
+    }
+
+
+    //TODO 수량이 0개일 때에는 어떻게 할 것인가?
+    public void modify( int quantity) {
+        this.quantity = quantity;
     }
 }

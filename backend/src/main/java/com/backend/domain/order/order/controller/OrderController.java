@@ -1,5 +1,7 @@
 package com.backend.domain.order.order.controller;
 
+import com.backend.domain.order.order.dto.OrderCreateRequest;
+import com.backend.domain.order.order.dto.OrderModifyRequest;
 import com.backend.domain.order.order.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -22,52 +24,16 @@ import java.util.List;
 @RequestMapping("/api/v1/order")
 @RequiredArgsConstructor
 public class OrderController {
+
     private final OrderService orderService;
 
-    //받아오는 상품 형식
-    /*record RequestedItems(
-            @NotBlank
-            String itemName,
-
-            @Min(1)
-            int quantity
-    ) {}*/
-
-    //주문 시 내용을 받아오는 형식
-    record OrderCreateRequestBody(
-
-            @NotBlank
-            @Size(min = 2, max = 80)
-            String email,
-
-            @NotBlank
-            @Size(min = 2, max = 80)
-            String zipCode,
-
-            @NotBlank
-            @Size(min = 2, max = 200)
-            String address,
-
-            @NotEmpty
-            @Valid
-            List<Item> items
-    ){}
-
-
-    //TODO 리뷰필요
     @PostMapping("/create")
     @Transactional
     @Operation(summary = "최초 주문")
     public RsData<OrderDto> create(
-            @Valid @RequestBody OrderCreateRequestBody orderCreateRequestBody
+            @Valid @RequestBody OrderCreateRequest req
     ){
-
-        Order order = orderService.create(
-                orderCreateRequestBody.email,
-                orderCreateRequestBody.zipCode,
-                orderCreateRequestBody.address,
-                orderCreateRequestBody.items
-        ); // 수정 예정
+        Order order = orderService.create(req);// 수정 예정
 
         return new RsData<>(
                 "201-1",
@@ -76,39 +42,18 @@ public class OrderController {
         );
     }
 
-    //주문 수정 시 내용을 받아오는 형식
-    record OrderModifyRequestBody(
-
-            @NotBlank
-            @Size(min = 2, max = 80)
-            String email,
-
-            @NotBlank
-            @Size(min = 2, max = 80)
-            String zipCode,
-
-            @NotBlank
-            @Size(min = 2, max = 200)
-            String address,
-
-            @NotEmpty
-            @Valid
-            List<Item> items
-    ){}
-
-    //TODO 리뷰필요
     @PutMapping("/modify/{order_id}")
     @Transactional
     @Operation(summary = "주문 수정")
     public RsData<Void> modifyOrder(
             @PathVariable int order_id,
-            @Valid @RequestBody OrderModifyRequestBody orderModifyRequestBody
+            @Valid @RequestBody OrderModifyRequest req
     ){
         Order order = orderService.findById(order_id).get();
 
         orderService.modify(
                 order,
-                orderModifyRequestBody.items
+                req
         );
 
         return new RsData<>(

@@ -1,6 +1,7 @@
 package com.backend.domain.item.item.entity;
 
 
+import com.backend.domain.order.orderItem.entity.OrderItem;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class Item {
 
     @Column(length = 100)
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private OrderItem orderItem;
 
     public Item(String name, String category, int price, String imageUrl) {
         this.name = name;

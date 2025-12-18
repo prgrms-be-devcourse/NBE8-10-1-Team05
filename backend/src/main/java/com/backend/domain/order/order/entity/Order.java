@@ -5,25 +5,22 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import com.backend.domain.order.orderItem.entity.OrderItem;
-import com.backend.domain.item.item.entity.Item;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.CascadeType.REMOVE;
-import static jakarta.persistence.FetchType.LAZY;
+import jakarta.persistence.Id;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
 @Getter
 @NotBlank
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "orderDetail")
 public class Order{
 
     @Id
@@ -36,10 +33,11 @@ public class Order{
 
     @OneToOne
     @JoinColumn(name = "order_detail_id")
-    private OrderItem orderItem;
+    private List<OrderItem> orderItems;
 
     @CreatedDate
     private LocalDateTime createDate;
+
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
@@ -63,16 +61,21 @@ public class Order{
         }
     }
 
+    protected Order() {}
 
-    public Order(String email, String address, String zipCode, List<Item> items) {
-        this.email = email;
-        this.address = address;
-        this.zipCode = zipCode;
-        this.orderItem = new OrderItem(items);
+    public static Order create(String email, String address, String zipCode, List<OrderItem> items){
+        Order order = new Order();
+        order.email = email;
+        order.address = address;
+        order.zipCode = zipCode;
+        order.orderItems = items;
+
+        return order;
     }
 
     //상품 리스트만 받아와서 수정
-    public void modify(List<Item> items) {
-        modify(items);
+    public void modify(List<OrderItem> items) {
+        this.orderItems = items;
+        this.modifyDate = LocalDateTime.now();
     }
 }
