@@ -1,12 +1,18 @@
-name: Preview
+name: Frontend Preview
 
 on:
   pull_request:
-    branches: ['main']
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/preview.yml'
 
 jobs:
-  vercel-preview:
+  frontend-preview:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
 
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
