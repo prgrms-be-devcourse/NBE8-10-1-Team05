@@ -32,17 +32,16 @@ public class BaseInitData {
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-           // self.work1();
-            self.work2();
+            self.work1();
+            //self.work2();
+            //self.work4();
             //self.work3();
-           // self.work4();
         };
     }
 
     @Transactional
     public void work1() {
         //System.out.println("work1, 아이템 완성된 후, itemService 사용해서 Item db에 추가해주세요\n");
-        //TODO itemService 사용해서 Item db에 추가해주세요
         itemService.createItem("Columbia Nariño", "커피콩", 5000, "image/Columbia_Nariño.png");
         itemService.createItem("Brazil Serra Do Caparaó", "커피콩", 6000, "image/Brazil_Serra_Do_Caparaó.png");
         itemService.createItem("Columbia Quindío (White Wine Extended Fermentation)", "커피콩", 7000, "image/Columbia_Quindío.png");
@@ -92,7 +91,7 @@ public class BaseInitData {
                 )
         );
 
-        Order order = getOrderById(33);
+        Order order = getOrderById(1);
 
         orderService.modify(order, orderReq);
     }

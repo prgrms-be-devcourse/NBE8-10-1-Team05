@@ -1,7 +1,6 @@
 package com.backend.domain.item.item.entity;
 
 
-import com.backend.domain.order.orderItem.entity.OrderItem;
 import com.backend.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,8 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "item")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Item extends BaseEntity {
-
+public class Item extends BaseEntity{
     @Column(nullable = false, length = 255)
     private String name;
 
@@ -25,9 +23,6 @@ public class Item extends BaseEntity {
 
     @Column(length = 100)
     private String imageUrl;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private OrderItem orderItem;
 
     public Item(String name, String category, int price, String imageUrl) {
         this.name = name;
