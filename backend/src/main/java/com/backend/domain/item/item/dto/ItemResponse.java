@@ -9,8 +9,8 @@ public record ItemResponse(
         Integer price,
         String imageUrl
 ) {
-    public static ItemResponse from(Item item) {
-        return new ItemResponse(
+    public ItemResponse (Item item) {
+        this(
                 item.getId(),
                 item.getName(),
                 item.getCategory(),
