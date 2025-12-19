@@ -18,7 +18,7 @@ export default function OrderPage() {
 
   useEffect(() => {
     apiFetch('/api/v1/item/list')
-      .then(setItems)
+      .then((data) => setItems(data.data))
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }, []);
 
