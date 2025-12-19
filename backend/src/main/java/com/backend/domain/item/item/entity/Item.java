@@ -1,6 +1,7 @@
 package com.backend.domain.item.item.entity;
 
 
+import com.backend.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,11 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "item")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Item extends BaseEntity{
     @Column(nullable = false, length = 255)
     private String name;
 
