@@ -6,39 +6,19 @@ import { Order } from "@/global/interface/order";
 import { apiFetch } from "@/lib/backend/client";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const router = useRouter();
   const { id: idStr } = useParams<{ id: string }>();
   const id = parseInt(idStr);
+  const [order, setOrder] = useState<Order | null>(null);
 
-  const order: Order = {
-    id: id,
-    email: 'ex@example.com',
-    address: '서울 성동구 00동',
-    zipCode: '12345',
-    createDate: '2025-12-12T09:07:13.632499',
-    modifyDate: '2025-12-12T10:07:13.632499',
-    orderItem: [
-      {
-        id: 1,
-        name: '에티오피아 콩',
-        category: '커피콩',
-        quantity: 3,
-        price: 14000,
-        imageUrl: 'http://www.naver.com'
-      },
-      {
-        id: 3,
-        name: '맥심 커피믹스',
-        category: '커피',
-        quantity: 5,
-        price: 8000,
-        imageUrl: 'http://www.google.com'
-      }
-    ],
-    total: 32000
-  };
+  useEffect(() => {
+    apiFetch(`/api/v1/order/detail/${id}`)
+      .then(setOrder)
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+  }, []);
 
   const handleCancelOrder = (orderId: number): void => {
     if (!confirm(`${orderId}번 주문을 정말로 취소하시겠습니까?`)) return;
@@ -52,6 +32,8 @@ export default function Page() {
       })
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }
+
+  if (!order) return <div>로딩 중..</div>;
 
   return (
     <>
@@ -67,10 +49,10 @@ export default function Page() {
           <div className="text-black font-medium mb-1">우편번호: {order.zipCode}</div>
           <div className="text-black font-medium mb-6">총금액: {order.total}원</div>
           <div className="text-black text-xl font-bold mb-6">상품 목록</div>
-          {order.orderItem.length == 0
+          {order.orderItems.length == 0
             ? <div className="text-black">구매한 상품이 없습니다.</div>
-            : order.orderItem.map((item) => (
-              <div key={item.id} className="flex items-center gap-5 p-5 border-b border-gray-200">
+            : order.orderItems.map((item) => (
+              <div key={item.itemId} className="flex items-center gap-5 p-5 border-b border-gray-200">
                 {/* item Image */}
                 <div className="w-20 h-20 bg-gray-100 rounded-lg shrink-0 flex items-center justify-center overflow-hidden">
                   <img

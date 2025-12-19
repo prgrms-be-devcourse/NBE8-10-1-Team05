@@ -6,6 +6,11 @@ export interface Item {
   imageUrl: string;
 }
 
-export interface PurchaseItem extends Item {
+export interface PurchaseItem {
+  itemId: number;
+  category: string;
   quantity: number;
+  name: string;
+  price: number;
+  imageUrl: string;
 }

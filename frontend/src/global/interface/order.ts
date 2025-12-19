@@ -7,6 +7,6 @@ export interface Order {
   zipCode: string;
   createDate: string;
   modifyDate: string;
-  orderItem: PurchaseItem[];
+  orderItems: PurchaseItem[];
   total: number;
 }
