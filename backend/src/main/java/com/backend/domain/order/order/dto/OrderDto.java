@@ -1,10 +1,10 @@
 package com.backend.domain.order.order.dto;
 
-import java.time.LocalDateTime;
-
 import com.backend.domain.order.order.entity.Order;
 
-public record OrderDtoMany(
+import java.time.LocalDateTime;
+
+public record OrderDto(
         int id,
         String email,
         String address,
@@ -14,7 +14,7 @@ public record OrderDtoMany(
         LocalDateTime dueDate
 ){
 
-    public OrderDtoMany(Order order){
+    public OrderDto(Order order){
         this(
                 order.getId(),
                 order.getEmail(),
