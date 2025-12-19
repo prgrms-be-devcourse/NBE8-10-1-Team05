@@ -1,40 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '@/global/component/Header';
 import { Item } from '@/global/interface/item';
 import ItemDetail from '@/global/component/ItemDetail';
 import { useCart } from '@/hooks/useCart';
-
-const items: Item[] = [
-  {
-    id: 1,
-    category: '커피콩',
-    name: '에티오피아 커피콩',
-    price: 3000,
-    imageUrl: 'https://images.pexels.com/photos/20708703/pexels-photo-20708703.jpeg',
-  },
-  {
-    id: 2,
-    category: '커피콩',
-    name: 'Brazil Serra Do Caparaó',
-    price: 5000,
-    imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg',
-  },
-  {
-    id: 3,
-    category: '커피콩',
-    name: 'Columbia Nariñó',
-    price: 6500,
-    imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg',
-  },
-];
+import { apiFetch } from '@/lib/backend/client';
 
 export default function OrderPage() {
+  const [items, setItems] = useState<Item[]>([]);
   const { counts, cart, increase, decrease, totalAmount } = useCart(items);
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [zipCode, setZipCode] = useState('');
+
+  useEffect(() => {
+    apiFetch('/api/v1/item/list')
+      .then(setItems)
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+  }, []);
 
   const handleCheckout = () => {
     console.log('결제 내역:', { cart, email, address, zipCode });
@@ -51,15 +35,17 @@ export default function OrderPage() {
           {/* Left: Item List */}
           <div className="p-6 flex-1">
             <h2 className="text-black text-2xl font-bold mb-6">상품 목록</h2>
-            {items.map((item) => (
-              <ItemDetail
-                key={item.id}
-                item={item}
-                count={counts[item.id] ?? 0}
-                onIncrease={() => increase(item)}
-                onDecrease={() => decrease(item)}
-              />
-            ))}
+            {items.length == 0
+              ? <div>상품이 없습니다.</div>
+              : items.map((item) => (
+                <ItemDetail
+                  key={item.id}
+                  item={item}
+                  count={counts[item.id] ?? 0}
+                  onIncrease={() => increase(item)}
+                  onDecrease={() => decrease(item)}
+                />
+              ))}
           </div>
 
           {/* Right: Order Summary */}
