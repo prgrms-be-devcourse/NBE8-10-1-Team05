@@ -26,8 +26,11 @@ public class OrderService {
         Order order = Order.create(
                 req.email(),
                 req.zipCode(),
-                req.address(),
-                req.items()
+                req.address()
+        );
+
+        req.items().forEach(item ->
+                order.addOrderItem(item.itemId(), item.quantity())
         );
 
         return orderRepository.save(order);
@@ -39,7 +42,7 @@ public class OrderService {
 
     public void modify(Order order, OrderModifyRequest req) {
 
-        order.modify(order, req.items());
+        order.modify(req.items());
     }
 
     public List<Order> findByEmail(String email) {

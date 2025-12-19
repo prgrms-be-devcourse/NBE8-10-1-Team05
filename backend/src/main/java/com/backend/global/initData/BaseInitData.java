@@ -32,10 +32,10 @@ public class BaseInitData {
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            self.work1();
-            //self.work2();
-            //self.work4();
-            //self.work3();
+            self.work1(); // item 생성
+            self.work2(); // order 생성
+            //self.work3(); // order:1 삭제
+            self.work4(); // order:1 수정
         };
     }
 
@@ -54,13 +54,13 @@ public class BaseInitData {
     @Transactional
     public void work2() {
         OrderCreateRequest orderReq = new OrderCreateRequest(
-                "bbb@test.com",
-                "77777",
-                "후쿠오카",
+                "ccc@test.com",
+                "11111",
+                "부산",
                 List.of(
-                        new RequestedItem(1, 2),
-                        new RequestedItem(2, 1),
-                        new RequestedItem(4, 3)
+                        new RequestedItem(11, 22),
+                        new RequestedItem(22, 11),
+                        new RequestedItem(44, 33)
                 )
         );
 

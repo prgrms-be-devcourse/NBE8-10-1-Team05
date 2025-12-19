@@ -4,12 +4,11 @@ import com.backend.domain.order.order.dto.OrderCreateRequest;
 import com.backend.domain.order.order.dto.OrderModifyRequest;
 import com.backend.domain.order.order.dto.RequestedItem;
 import com.backend.domain.order.order.service.OrderService;
-import com.backend.domain.order.orderItem.entity.OrderItem;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.backend.domain.order.order.dto.OrderDtoMany;
+import com.backend.domain.order.order.dto.OrderDto;
 import com.backend.domain.order.order.entity.Order;
 import com.backend.global.rsData.RsData;
 
@@ -28,7 +27,7 @@ public class OrderController {
     @PostMapping("/create")
     @Transactional
     @Operation(summary = "최초 주문")
-    public RsData<OrderDtoMany> create(
+    public RsData<OrderDto> create(
             @Valid @RequestBody OrderCreateRequest req
     ){
         Order order = orderService.create(req);
@@ -36,7 +35,7 @@ public class OrderController {
         return new RsData<>(
                 "201-1",
                 "주문이 완료되었습니다",
-                new OrderDtoMany(order)
+                new OrderDto(order)
         );
     }
 
@@ -63,7 +62,7 @@ public class OrderController {
     @DeleteMapping("/cancel/{order_id}")
     @Transactional
     @Operation(summary = "주문 취소")
-    public RsData<OrderDtoMany> cancelOrder(
+    public RsData<OrderDto> cancelOrder(
             @PathVariable int order_id
     ){
         Order order = orderService.findById(order_id).get();
@@ -73,7 +72,7 @@ public class OrderController {
         return new RsData<>(
                 "200-1",
                 "주문 취소가 완료되었습니다.",
-                new OrderDtoMany(order)
+                new OrderDto(order)
         );
     }
 
@@ -81,7 +80,7 @@ public class OrderController {
     @GetMapping("/listByEmail/{email}")
     @Transactional(readOnly = true)
     @Operation(summary = "다건 조회")
-    public List<OrderDtoMany> findByEmail(
+    public List<OrderDto> findByEmail(
             @PathVariable String email
     ){
 
@@ -89,7 +88,7 @@ public class OrderController {
 
         return orders
                 .stream()
-                .map(OrderDtoMany::new)
+                .map(OrderDto::new)
                 .toList();
     }
 
