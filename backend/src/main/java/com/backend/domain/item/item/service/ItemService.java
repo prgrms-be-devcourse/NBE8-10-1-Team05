@@ -25,13 +25,14 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Item> findById(Integer id){return itemRepository.findById(id);}
 
     @Transactional
     public Item modifyItem(Integer id, String name, String category, int price, String imageUrl) {
         // .orElseThrow()로 Optional 껍질을 벗겨줍니다.
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이템이 없습니다. id=" + id));
-
         item.modify(name, category, price, imageUrl);
 
         return item;

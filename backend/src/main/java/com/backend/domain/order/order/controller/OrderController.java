@@ -1,20 +1,23 @@
 package com.backend.domain.order.order.controller;
 
+import com.backend.domain.item.item.entity.Item;
+import com.backend.domain.item.item.service.ItemService;
 import com.backend.domain.order.order.dto.OrderCreateRequest;
+import com.backend.domain.order.order.dto.OrderDetailResponse;
+import com.backend.domain.order.order.dto.OrderDto;
 import com.backend.domain.order.order.dto.OrderModifyRequest;
-import com.backend.domain.order.order.dto.RequestedItem;
+import com.backend.domain.order.order.entity.Order;
 import com.backend.domain.order.order.service.OrderService;
+import com.backend.domain.order.orderItem.dto.OrderItemDetailDto;
+import com.backend.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.backend.domain.order.order.dto.OrderDto;
-import com.backend.domain.order.order.entity.Order;
-import com.backend.global.rsData.RsData;
-
-import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,7 +26,7 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final OrderService orderService;
-
+    private final ItemService itemService;
     @PostMapping("/create")
     @Transactional
     @Operation(summary = "최초 주문")
@@ -92,20 +95,25 @@ public class OrderController {
                 .toList();
     }
 
-
+    //주문서 수정 페이지/주문 단건 조회 페이지에 쓰임
     @GetMapping("/detail/{order_id}")
     @Transactional(readOnly = true)
     @Operation(summary = "단건 조회")
-    public List<RequestedItem> getOrderDetail(
-            @PathVariable int order_id
-    ){
+    public OrderDetailResponse getOrderDetail(@PathVariable int order_id){
+
         Order order = orderService.findById(order_id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        // OrderItem 리스트를 RequestedItem 리스트로 변환
-        return order.getOrderItems().stream()
-                .map(oi -> new RequestedItem(oi.getItemId(), oi.getQuantity()))
-                .collect(Collectors.toList());
+        //lambda 안에서 총 가격 계산을 작업하기 위해 int total 대신 AtomicInteger total를 사용
+        AtomicInteger total = new AtomicInteger();
+        // OrderItem 리스트를 OrderItemDetailDto 리스트로 변환
+        List<OrderItemDetailDto> items = order.getOrderItems().stream().map(
+                oi-> {
+                    Item i = itemService.findById(oi.getItemId())
+                            .orElseThrow(() -> new RuntimeException("Item #" + oi.getItemId() + " exists in Order #" + oi.getId() + " but does not found in Item DB"));
+                    total.addAndGet(i.getPrice() * oi.getQuantity());
+                    return new OrderItemDetailDto(i, oi.getQuantity());
+                }).collect(Collectors.toList());
+        return new OrderDetailResponse(order, items, total.get());
     }
 
 }
