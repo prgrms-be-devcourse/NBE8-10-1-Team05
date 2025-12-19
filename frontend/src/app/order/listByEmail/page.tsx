@@ -17,11 +17,10 @@ export default function Page() {
   const once = useRef(false);
 
   useEffect(() => {
-    if (once.current) return;
-    once.current = true;
-    const input = prompt('이메일을 입력하세요.');
-    if (input) {
-      setEmail(input);
+    // 로컬 스토리지에 저장된 이메일 가져오기
+    const savedEmail = localStorage.getItem('email');
+    if (savedEmail) {
+      setEmail(savedEmail);
     }
   }, []);
 
