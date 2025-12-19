@@ -34,7 +34,15 @@ export default function Page() {
 
   const handleCancelOrder = (orderId: number): void => {
     if (!confirm(`${orderId}번 주문을 정말로 취소하시겠습니까?`)) return;
-    // TODO: 주문 취소 api 연동
+    // 주문 취소 api 연동
+    apiFetch(`/api/v1/order/cancel/${orderId}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        alert('주문이 취소되었습니다.');
+        setOrders(orders.filter(order => order.id != orderId));
+      })
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }
 
   return (
