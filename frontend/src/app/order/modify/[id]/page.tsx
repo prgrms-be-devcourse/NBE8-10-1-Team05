@@ -6,12 +6,45 @@ import { Item } from '@/global/interface/item';
 import ItemDetail from '@/global/component/ItemDetail';
 import { useCart } from '@/hooks/useCart';
 import { apiFetch } from '@/lib/backend/client';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Button from '@/global/component/Button';
+import { useParams } from 'next/navigation';
+import { Order } from '@/global/interface/order';
 
-export default function OrderPage() {
-  const router = useRouter();
+export default function Page() {
+  const { id: idStr } = useParams<{ id: string }>();
+  const id = parseInt(idStr);
+
+  const order: Order = {
+    id: id,
+    email: 'ex@example.com',
+    address: '서울 성동구 00동',
+    zipCode: '12345',
+    createDate: '2025-12-12T09:07:13.632499',
+    modifyDate: '2025-12-12T10:07:13.632499',
+    orderItem: [
+      {
+        id: 1,
+        name: '에티오피아 콩',
+        category: '커피콩',
+        quantity: 3,
+        price: 14000,
+        imageUrl: 'http://www.naver.com'
+      },
+      {
+        id: 3,
+        name: '맥심 커피믹스',
+        category: '커피',
+        quantity: 5,
+        price: 8000,
+        imageUrl: 'http://www.google.com'
+      }
+    ],
+    total: 32000
+  };
+
   const [items, setItems] = useState<Item[]>([]);
-  const { counts, cart, increase, decrease, totalAmount } = useCart(items);
+  const { counts, setCounts, cart, setCart, increase, decrease, totalAmount } = useCart(items);
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [zipCode, setZipCode] = useState('');
@@ -22,49 +55,41 @@ export default function OrderPage() {
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }, []);
 
-  const handleCheckout = () => {
-    // 상품 개수가 0개인지 확인
-    if (cart.length == 0) {
-      alert('1개 이상의 상품을 선택해주세요.');
-      return;
-    }
+  useEffect(() => {
+    if (items.length === 0) return; // 상품 목록 로드 전이면 패스
 
-    // 이메일, 주소, 우편번호 유효성 검사
-    if (!email || email.trim() === '') {
-      alert('이메일을 입력해주세요.');
-      return;
-    }
+    // 1. counts 세팅 (itemId → quantity)
+    const nextCounts: Record<number, number> = {};
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      alert('올바른 이메일 형식으로 입력해주세요.');
-      return;
-    }
+    order.orderItem.forEach((orderItem) => {
+      nextCounts[orderItem.id] = orderItem.quantity;
+    });
 
-    if (!address || address.trim() === '') {
-      alert('주소를 입력해주세요.');
-      return;
-    }
+    setCounts(nextCounts);
 
-    if (!zipCode || zipCode.trim() === '') {
-      alert('우편번호를 입력해주세요.');
-      return;
-    }
+    // 2. cart 세팅
+    const nextCart = order.orderItem.map((orderItem) => ({
+      itemId: orderItem.id,
+      name: orderItem.name,
+      quantity: orderItem.quantity,
+    }));
 
-    apiFetch('/api/v1/order/create', {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        address,
-        zipCode,
-        items: cart
-      })
-    })
-      .then((data) => {
-        alert('주문이 완료되었습니다.');
-        router.replace(`/order/detail/${data.data.id}`);
-      })
-      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+    setCart(nextCart);
+
+    // 3. 배송 정보 세팅  
+    setEmail(order.email);
+    setAddress(order.address);
+    setZipCode(order.zipCode);
+  }, [items]);
+
+  const handleModify = () => {
+    console.log('수정 내역:', { cart, email, address, zipCode });
   };
+
+  const handleCancelOrder = (orderId: number): void => {
+    if (!confirm(`${orderId}번 주문을 정말로 취소하시겠습니까?`)) return;
+    // TODO: 주문 취소 api 연동
+  }
 
   return (
     <>
@@ -76,7 +101,9 @@ export default function OrderPage() {
         <div className="bg-white rounded-xl shadow-lg flex flex-col lg:flex-row overflow-hidden">
           {/* Left: Item List */}
           <div className="p-6 flex-1">
-            <h2 className="text-black text-2xl font-bold mb-6">상품 목록</h2>
+            <h2 className="text-black text-2xl font-bold mb-6">주문서 수정</h2>
+            <div className="text-black font-medium mb-6">주문 번호: {order.id}</div>
+            <div className="text-black text-xl font-bold mb-6">상품 목록</div>
             {items.length == 0
               ? <div>상품이 없습니다.</div>
               : items.map((item) => (
@@ -155,13 +182,19 @@ export default function OrderPage() {
               <span className="text-black text-2xl font-bold">{totalAmount}원</span>
             </div>
 
-            {/* Checkout Button */}
+            {/* Buttons */}
             <button
-              onClick={handleCheckout}
+              onClick={handleModify}
               className="w-full bg-black text-white py-4 rounded-lg font-bold hover:bg-gray-800 cursor-pointer"
             >
-              결제하기
+              수정하기
             </button>
+            <div className="flex gap-2 mt-6 justify-center">
+              <Link href={`/order/detail/${order.id}`}>
+                <Button color="gray" content="돌아가기" />
+              </Link>
+              <Button color="red" content="주문 취소" handler={() => handleCancelOrder(order.id)} />
+            </div>
           </div>
         </div>
       </div>

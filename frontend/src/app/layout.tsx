@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${notoSansKr.variable} antialiased`}
+        className={`${notoSansKr.variable} antialiased min-h-screen flex flex-col`}
       >
         {children}
       </body>

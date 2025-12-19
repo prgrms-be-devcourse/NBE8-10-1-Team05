@@ -47,9 +47,7 @@ public class Order extends BaseEntity {
     //주문 기한 시각을 createDate를 기준 계산하는 로직
     @PrePersist
     private void calculateDueDate() {
-        LocalDateTime base = this.createDate != null
-                ? this.createDate
-                : LocalDateTime.now();
+        LocalDateTime base =  LocalDateTime.now();
 
         LocalDate today = base.toLocalDate();
         LocalTime deadline = LocalTime.of(14, 0);
@@ -73,8 +71,7 @@ public class Order extends BaseEntity {
     public static Order create(
             String email,
             String zipCode,
-            String address,
-            List<RequestedItem> items
+            String address
     ) {
         Order order = new Order();
         order.email = email;
@@ -82,16 +79,11 @@ public class Order extends BaseEntity {
         order.address = address;
         order.createDate = LocalDateTime.now();
 
-        items.forEach(item ->
-                order.addOrderItem(item.itemId(), item.quantity())
-        );
-
         return order;
     }
 
     //상품 리스트만 받아와서 수정
     public void modify(
-            Order order,
             List<RequestedItem> items
     ) {
         this.modifyDate = LocalDateTime.now();
@@ -99,7 +91,7 @@ public class Order extends BaseEntity {
         orderItems.clear();
 
         items.forEach(item ->
-                order.addOrderItem(item.itemId(), item.quantity())
+                addOrderItem(item.itemId(), item.quantity())
         );
     }
 }

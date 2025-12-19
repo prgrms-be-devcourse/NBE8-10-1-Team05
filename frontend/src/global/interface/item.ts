@@ -5,3 +5,7 @@ export interface Item {
   price: number;
   imageUrl: string;
 }
+
+export interface PurchaseItem extends Item {
+  quantity: number;
+}
