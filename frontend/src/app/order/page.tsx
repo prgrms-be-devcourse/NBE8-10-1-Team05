@@ -6,8 +6,10 @@ import { Item } from '@/global/interface/item';
 import ItemDetail from '@/global/component/ItemDetail';
 import { useCart } from '@/hooks/useCart';
 import { apiFetch } from '@/lib/backend/client';
+import { useRouter } from 'next/navigation';
 
 export default function OrderPage() {
+  const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
   const { counts, cart, increase, decrease, totalAmount } = useCart(items);
   const [email, setEmail] = useState('');
@@ -21,13 +23,47 @@ export default function OrderPage() {
   }, []);
 
   const handleCheckout = () => {
-    console.log('결제 내역:', { cart, email, address, zipCode });
-    console.log(JSON.stringify({
-      email,
-      address,
-      zipCode,
-      orderItem: cart
-    }));
+    // 상품 개수가 0개인지 확인
+    if (cart.length == 0) {
+      alert('1개 이상의 상품을 선택해주세요.');
+      return;
+    }
+
+    // 이메일, 주소, 우편번호 유효성 검사
+    if (!email || email.trim() === '') {
+      alert('이메일을 입력해주세요.');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('올바른 이메일 형식으로 입력해주세요.');
+      return;
+    }
+
+    if (!address || address.trim() === '') {
+      alert('주소를 입력해주세요.');
+      return;
+    }
+
+    if (!zipCode || zipCode.trim() === '') {
+      alert('우편번호를 입력해주세요.');
+      return;
+    }
+
+    apiFetch('/api/v1/order/create', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        address,
+        zipCode,
+        items: cart
+      })
+    })
+      .then((data) => {
+        alert('주문이 완료되었습니다.');
+        router.replace(`/order/detail/${data.data.id}`);
+      })
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   };
 
   return (
