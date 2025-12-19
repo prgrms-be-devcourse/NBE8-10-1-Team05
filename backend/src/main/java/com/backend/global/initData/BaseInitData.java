@@ -32,10 +32,10 @@ public class BaseInitData {
     @Bean
     ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            self.work1(); // item 생성
-            self.work2(); // order 생성
+            //self.work1(); // item 생성
+            //self.work2(); // order 생성
             //self.work3(); // order:1 삭제
-            self.work4(); // order:1 수정
+            //self.work4(); // order:1 수정
         };
     }
 

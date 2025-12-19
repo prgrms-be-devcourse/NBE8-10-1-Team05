@@ -8,20 +8,6 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record OrderModifyRequest(
-
-        //필요없어 보임.
-        /*@NotBlank
-        @Size(min = 2, max = 80)
-        String email,
-
-        @NotBlank
-        @Size(min = 2, max = 80)
-        String zipCode,
-
-        @NotBlank
-        @Size(min = 2, max = 200)
-        String address,
-*/
         @NotEmpty
         @Valid
         List<RequestedItem> items

@@ -1,6 +1,7 @@
 package com.backend.domain.order.orderItem.entity;
 
 import com.backend.global.jpa.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import com.backend.domain.order.order.entity.Order;
@@ -12,6 +13,7 @@ public class OrderItem extends BaseEntity {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private Order order;
     private int itemId;
     private int quantity;
