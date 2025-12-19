@@ -37,7 +37,8 @@ export default function OrderPage() {
 
     // 이메일, 주소, 우편번호 유효성 검사
     if (!email || email.trim() === '') {
-      alert('이메일을 입력해주세요.');
+      alert('초기 화면에서 이메일로 접속해주세요.');
+      router.push('/');
       return;
     }
 
