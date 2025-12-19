@@ -8,10 +8,11 @@ import { useCart } from '@/hooks/useCart';
 import { apiFetch } from '@/lib/backend/client';
 import Link from 'next/link';
 import Button from '@/global/component/Button';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Order } from '@/global/interface/order';
 
 export default function Page() {
+  const router = useRouter();
   const { id: idStr } = useParams<{ id: string }>();
   const id = parseInt(idStr);
 
@@ -88,7 +89,15 @@ export default function Page() {
 
   const handleCancelOrder = (orderId: number): void => {
     if (!confirm(`${orderId}번 주문을 정말로 취소하시겠습니까?`)) return;
-    // TODO: 주문 취소 api 연동
+    // 주문 취소 api 연동
+    apiFetch(`/api/v1/order/cancel/${orderId}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        alert('주문이 취소되었습니다.');
+        router.replace('/order/listByEmail');
+      })
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }
 
   return (

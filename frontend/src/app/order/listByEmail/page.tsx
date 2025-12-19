@@ -2,6 +2,7 @@
 
 import Button from "@/global/component/Button";
 import Header from "@/global/component/Header";
+import { apiFetch } from "@/lib/backend/client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -10,31 +11,8 @@ interface Order {
   createDate: string;
 }
 
-const orders: Order[] = [
-  {
-    id: 5,
-    createDate: "2025-12-12T09:07:13.632499"
-  },
-  {
-    id: 4,
-    createDate: "2025-12-12T09:07:13.632499"
-  },
-  {
-    id: 3,
-    createDate: "2025-12-12T09:07:13.632499"
-  },
-  {
-    id: 2,
-    createDate: "2025-12-12T09:07:13.632499"
-  },
-  {
-    id: 1,
-    createDate: "2025-12-12T09:07:13.632499"
-  },
-];
-
-
 export default function Page() {
+  const [orders, setOrders] = useState<Order[]>([]);
   const [email, setEmail] = useState<string | null>(null);
   const once = useRef(false);
 
@@ -47,9 +25,24 @@ export default function Page() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!email) return; // email 준비되기 전엔 실행 안 함
+    apiFetch(`/api/v1/order/listByEmail/${email}`)
+      .then(setOrders)
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+  }, [email]); // email이 바뀔 때 실행
+
   const handleCancelOrder = (orderId: number): void => {
     if (!confirm(`${orderId}번 주문을 정말로 취소하시겠습니까?`)) return;
-    // TODO: 주문 취소 api 연동
+    // 주문 취소 api 연동
+    apiFetch(`/api/v1/order/cancel/${orderId}`, {
+      method: 'DELETE'
+    })
+      .then(() => {
+        alert('주문이 취소되었습니다.');
+        setOrders(orders.filter(order => order.id != orderId));
+      })
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }
 
   return (
