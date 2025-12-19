@@ -12,6 +12,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry
                 .addMapping("/api/**")
                 .allowedOrigins("http://localhost:3000")
+                .allowedOriginPatterns("https://*.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
