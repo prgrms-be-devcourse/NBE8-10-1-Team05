@@ -16,61 +16,41 @@ export default function Page() {
   const { id: idStr } = useParams<{ id: string }>();
   const id = parseInt(idStr);
 
-  const order: Order = {
-    id: id,
-    email: 'ex@example.com',
-    address: '서울 성동구 00동',
-    zipCode: '12345',
-    createDate: '2025-12-12T09:07:13.632499',
-    modifyDate: '2025-12-12T10:07:13.632499',
-    orderItem: [
-      {
-        id: 1,
-        name: '에티오피아 콩',
-        category: '커피콩',
-        quantity: 3,
-        price: 14000,
-        imageUrl: 'http://www.naver.com'
-      },
-      {
-        id: 3,
-        name: '맥심 커피믹스',
-        category: '커피',
-        quantity: 5,
-        price: 8000,
-        imageUrl: 'http://www.google.com'
-      }
-    ],
-    total: 32000
-  };
-
   const [items, setItems] = useState<Item[]>([]);
   const { counts, setCounts, cart, setCart, increase, decrease, totalAmount } = useCart(items);
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [zipCode, setZipCode] = useState('');
+  const [order, setOrder] = useState<Order | null>(null);
 
   useEffect(() => {
+    // 주문 단건 조회
+    apiFetch(`/api/v1/order/detail/${id}`)
+      .then(setOrder)
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+
+    // 상품 목록 불러오기
     apiFetch('/api/v1/item/list')
       .then((data) => setItems(data.data))
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }, []);
 
   useEffect(() => {
+    if (!order) return; // 주문 목록 로드 전이면 패스
     if (items.length === 0) return; // 상품 목록 로드 전이면 패스
 
     // 1. counts 세팅 (itemId → quantity)
     const nextCounts: Record<number, number> = {};
 
-    order.orderItem.forEach((orderItem) => {
-      nextCounts[orderItem.id] = orderItem.quantity;
+    order.orderItems.forEach((orderItem) => {
+      nextCounts[orderItem.itemId] = orderItem.quantity;
     });
 
     setCounts(nextCounts);
 
     // 2. cart 세팅
-    const nextCart = order.orderItem.map((orderItem) => ({
-      itemId: orderItem.id,
+    const nextCart = order.orderItems.map((orderItem) => ({
+      itemId: orderItem.itemId,
       name: orderItem.name,
       quantity: orderItem.quantity,
     }));
@@ -84,7 +64,37 @@ export default function Page() {
   }, [items]);
 
   const handleModify = () => {
-    console.log('수정 내역:', { cart, email, address, zipCode });
+    // 상품 개수가 0개인지 확인
+    if (cart.length == 0) {
+      alert('1개 이상의 상품을 선택해주세요.');
+      return;
+    }
+
+    // 주소, 우편번호 유효성 검사
+    if (!address || address.trim() === '') {
+      alert('주소를 입력해주세요.');
+      return;
+    }
+
+    if (!zipCode || zipCode.trim() === '') {
+      alert('우편번호를 입력해주세요.');
+      return;
+    }
+
+    apiFetch(`/api/v1/order/modify/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        email,
+        address,
+        zipCode,
+        items: cart
+      })
+    })
+      .then(() => {
+        alert('수정이 완료되었습니다.');
+        router.push(`/order/detail/${id}`);
+      })
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   };
 
   const handleCancelOrder = (orderId: number): void => {
@@ -99,6 +109,8 @@ export default function Page() {
       })
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   }
+
+  if (!order) return <div>로딩 중...</div>;
 
   return (
     <>
