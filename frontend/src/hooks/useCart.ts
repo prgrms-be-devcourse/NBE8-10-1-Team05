@@ -70,7 +70,9 @@ export function useCart(items: Item[]) {
 
   return {
     counts,
+    setCounts,
     cart,
+    setCart,
     increase,
     decrease,
     totalAmount
