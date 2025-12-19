@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +20,11 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-    @Transactional(readOnly = true)
-    public List<Item> getItemList(){
-        return itemRepository.findAll();
+
+    public Optional<Item> findById(int id) {
+        return itemRepository.findById(id);
     }
+
 
     @Transactional
     public Item modifyItem(Integer id, String name, String category, int price, String imageUrl) {
@@ -39,4 +41,9 @@ public class ItemService {
     public void deleteItem(Integer id) {
         itemRepository.deleteById(id);
     }
+
+    public List<Item> findAll() {
+        return itemRepository.findAll();
+    }
+
 }
