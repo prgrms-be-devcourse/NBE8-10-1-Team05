@@ -6,8 +6,10 @@ import { Item } from '@/global/interface/item';
 import ItemDetail from '@/global/component/ItemDetail';
 import { useCart } from '@/hooks/useCart';
 import { apiFetch } from '@/lib/backend/client';
+import { useRouter } from 'next/navigation';
 
 export default function OrderPage() {
+  const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
   const { counts, cart, increase, decrease, totalAmount } = useCart(items);
   const [email, setEmail] = useState('');
@@ -28,6 +30,20 @@ export default function OrderPage() {
       zipCode,
       orderItem: cart
     }));
+    apiFetch('/api/v1/order/create', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        address,
+        zipCode,
+        items: cart
+      })
+    })
+      .then((data) => {
+        alert('주문이 완료되었습니다.');
+        router.replace(`/order/detail/${data.data.id}`);
+      })
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   };
 
   return (
