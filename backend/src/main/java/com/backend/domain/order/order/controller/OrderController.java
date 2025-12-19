@@ -4,7 +4,6 @@ import com.backend.domain.order.order.dto.OrderCreateRequest;
 import com.backend.domain.order.order.dto.OrderModifyRequest;
 import com.backend.domain.order.order.dto.RequestedItem;
 import com.backend.domain.order.order.service.OrderService;
-import com.backend.domain.order.orderItem.entity.OrderItem;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
