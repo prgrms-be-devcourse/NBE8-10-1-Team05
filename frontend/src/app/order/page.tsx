@@ -20,6 +20,12 @@ export default function OrderPage() {
     apiFetch('/api/v1/item/list')
       .then((data) => setItems(data.data))
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+
+    // 로컬 스토리지에 저장된 이메일 가져오기
+    const savedEmail = localStorage.getItem('email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
   }, []);
 
   const handleCheckout = () => {
@@ -61,7 +67,7 @@ export default function OrderPage() {
     })
       .then((data) => {
         alert('주문이 완료되었습니다.');
-        router.replace(`/order/detail/${data.data.id}`);
+        router.push(`/order/detail/${data.data.id}`);
       })
       .catch(error => alert(`${error.resultCode} : ${error.msg}`));
   };
@@ -118,8 +124,9 @@ export default function OrderPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                   placeholder="이메일을 입력하세요"
+                  readOnly // 수정 불가
                 />
               </div>
 
