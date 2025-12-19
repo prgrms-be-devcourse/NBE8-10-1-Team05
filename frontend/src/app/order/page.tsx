@@ -22,6 +22,12 @@ export default function OrderPage() {
 
   const handleCheckout = () => {
     console.log('결제 내역:', { cart, email, address, zipCode });
+    console.log(JSON.stringify({
+      email,
+      address,
+      zipCode,
+      orderItem: cart
+    }));
   };
 
   return (
