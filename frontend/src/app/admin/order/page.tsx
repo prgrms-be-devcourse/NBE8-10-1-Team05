@@ -2,52 +2,18 @@
 
 import Header from "@/global/component/Header";
 import { AdminOrder } from "@/global/interface/order";
+import { apiFetch } from "@/lib/backend/client";
 import { useEffect, useState } from "react";
 
-const sampleOrder: AdminOrder[] = [
-  {
-    email: 'ex1@example.com',
-    address: '부산',
-    zipCode: '12341',
-    combinedOrderItems: [
-      {
-        id: 1,
-        name: '에티오피아 콩',
-        quantity: 3
-      },
-      {
-        id: 3,
-        name: '맥심 커피믹스',
-        quantity: 5
-      }
-    ]
-  },
-  {
-    email: 'ex2@example.com',
-    address: '대전',
-    zipCode: '01234',
-    combinedOrderItems: [
-      {
-        id: 2,
-        name: '콜롬비아 커피 콩',
-        quantity: 1
-      },
-      {
-        id: 3,
-        name: '맥심 커피믹스',
-        quantity: 3
-      }
-    ]
-  }
-]
-
 export default function page() {
-  const [date, setDate] = useState(new Date('2025-12-17'));
+  const [date, setDate] = useState(new Date(Date.now()));
   const [orders, setOrders] = useState<AdminOrder[]>([]);
 
   useEffect(() => {
-    setOrders(sampleOrder);
-  }, []);
+    apiFetch(`/api/v1/admin/orders/listByDueDate/${toDisplayString(date)}`)
+      .then(data => setOrders(data.data))
+      .catch(error => alert(`${error.resultCode} : ${error.msg}`));
+  }, [date]);
 
   const handlePrev = () => {
     setDate(prev => {
@@ -79,8 +45,8 @@ export default function page() {
       <div className="bg-gray-300 px-5 pt-20 pb-5 flex-1">
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-black text-2xl font-bold mb-6">주문 내역 조회</h2>
-          {/* 날짜 정보 */}
 
+          {/* 날짜 정보 */}
           <div className="flex items-center justify-center w-full mb-6">
             <button
               className="px-6 py-2 bg-black text-white rounded border-black font-semibold mr-4 transition hover:bg-gray-700 cursor-pointer"
