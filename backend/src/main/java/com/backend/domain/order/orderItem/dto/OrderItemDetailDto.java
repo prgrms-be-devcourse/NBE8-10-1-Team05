@@ -11,7 +11,7 @@ public record OrderItemDetailDto(
         String category,
         @Min(1) int quantity,
         int price,
-        String imageURL
+        String imageUrl
 ) {
     public OrderItemDetailDto(Item item, int quantity) {
         this(item.getId(),
