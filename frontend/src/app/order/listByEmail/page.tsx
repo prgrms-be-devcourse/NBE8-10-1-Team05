@@ -4,7 +4,7 @@ import Button from "@/global/component/Button";
 import Header from "@/global/component/Header";
 import { apiFetch } from "@/lib/backend/client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Order {
   id: number;
@@ -14,7 +14,6 @@ interface Order {
 export default function Page() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [email, setEmail] = useState<string | null>(null);
-  const once = useRef(false);
 
   useEffect(() => {
     // 로컬 스토리지에 저장된 이메일 가져오기

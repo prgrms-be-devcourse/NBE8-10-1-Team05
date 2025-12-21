@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -51,6 +52,13 @@ public class OrderController {
     ){
         Order order = orderService.findById(order_id).get();
 
+        if (LocalDateTime.now().isAfter(order.getDueDate())) {
+            return new RsData<>(
+                    "400-1",
+                    "수정 불가한 주문입니다."
+            );
+        }
+
         orderService.modify(
                 order,
                 req
@@ -69,6 +77,13 @@ public class OrderController {
             @PathVariable int order_id
     ){
         Order order = orderService.findById(order_id).get();
+
+        if (LocalDateTime.now().isAfter(order.getDueDate())) {
+            return new RsData<>(
+                    "400-1",
+                    "취소 불가한 주문입니다."
+            );
+        }
 
         orderService.delete(order);
 

@@ -14,3 +14,9 @@ export interface PurchaseItem {
   price: number;
   imageUrl: string;
 }
+
+export interface CombinedOrderItem {
+  id: number;
+  name: string;
+  quantity: number;
+}

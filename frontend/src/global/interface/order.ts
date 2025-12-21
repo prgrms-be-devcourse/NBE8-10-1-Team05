@@ -1,4 +1,4 @@
-import { PurchaseItem } from "./item";
+import { CombinedOrderItem, PurchaseItem } from "./item";
 
 export interface Order {
   id: number;
@@ -9,4 +9,11 @@ export interface Order {
   modifyDate: string;
   orderItems: PurchaseItem[];
   total: number;
+}
+
+export interface AdminOrder {
+  email: string;
+  address: string;
+  zipCode: string;
+  combinedOrderItems: CombinedOrderItem[];
 }
