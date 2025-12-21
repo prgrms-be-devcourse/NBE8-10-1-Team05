@@ -46,5 +46,5 @@ team05  repository
   ```
   npm install
   npm run dev
-- [localhost:3000](http://localhost:3000/) 으로 접속해 아무 이메일이나 입력해 접속.
+- [localhost:3000](http://localhost:3000/) 으로 접속해 아무 이메일이나 입력해 접속. (john@gmail.com 으로 접속시 샘플 주문 정보가 있음.)
 - [localhost:3000/admin](http://localhost:3000/admin) <- 관리자 페이지
