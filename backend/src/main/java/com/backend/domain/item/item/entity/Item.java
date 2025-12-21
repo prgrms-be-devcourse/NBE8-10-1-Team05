@@ -21,7 +21,7 @@ public class Item extends BaseEntity{
     @Column(nullable = false, length = 20)
     private String category;
 
-    @Column(length = 100)
+    @Column(length = 250)
     private String imageUrl;
 
     public Item(String name, String category, int price, String imageUrl) {
