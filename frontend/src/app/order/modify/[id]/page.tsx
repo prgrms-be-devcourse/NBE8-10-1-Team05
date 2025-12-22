@@ -178,8 +178,9 @@ export default function Page() {
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                   placeholder="주소를 입력하세요"
+                  readOnly // 수정 불가
                 />
               </div>
 
@@ -189,8 +190,9 @@ export default function Page() {
                   type="text"
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value)}
-                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-white"
+                  className="text-black w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                   placeholder="우편번호를 입력하세요"
+                  readOnly // 수정 불가
                 />
               </div>
             </div>
