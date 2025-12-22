@@ -61,7 +61,7 @@ export default function Page() {
     setEmail(order.email);
     setAddress(order.address);
     setZipCode(order.zipCode);
-  }, [items]);
+  }, [order, items]);
 
   const handleModify = () => {
     // 상품 개수가 0개인지 확인
